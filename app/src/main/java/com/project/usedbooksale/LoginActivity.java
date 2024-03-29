@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
 
     private final String TAG = "LoginActivity";
-    private EditText et_email, et_password;
+    private EditText etEmail, etPassword;
     private FirebaseAuth mAuth;
 
     @Override
@@ -39,23 +39,22 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        et_email = findViewById(R.id.et_email);
-        et_password = findViewById(R.id.et_password);
+        etEmail = findViewById(R.id.et_email);
+        etPassword = findViewById(R.id.et_password);
     }
 
     public void onClickLogin(View view) {
+        final String username = etEmail.getText().toString();
+        final String password = etPassword.getText().toString();
 
-        final String username = et_email.getText().toString();
         if (username.isEmpty()) {
-            Snackbar.make(et_email, "Enter an email", Snackbar.LENGTH_SHORT)
+            Snackbar.make(etEmail, "Enter an email", Snackbar.LENGTH_SHORT)
                     .setAnchorView(findViewById(R.id.btn_login))
                     .show();
             return;
         }
-
-        final String password = et_password.getText().toString();
         if (password.isEmpty()) {
-            Snackbar.make(et_email, "Enter a password", Snackbar.LENGTH_SHORT)
+            Snackbar.make(etEmail, "Enter a password", Snackbar.LENGTH_SHORT)
                     .setAnchorView(findViewById(R.id.btn_login))
                     .show();
             return;
@@ -82,5 +81,11 @@ public class LoginActivity extends AppCompatActivity {
     public void onClickSignup(View view) {
         Intent signupActivityIntent = new Intent(getApplicationContext(), SignupActivity.class);
         startActivity(signupActivityIntent);
+        clearFields();
+    }
+
+    private void clearFields() {
+        etEmail.setText("");
+        etPassword.setText("");
     }
 }
