@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "872130952716",
+    "project_id": "used-book-sale-project",
+    "storage_bucket": "used-book-sale-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872130952716:android:37b36b98b84bf271edb829",
+        "android_client_info": {
+          "package_name": "com.project.usedbooksale"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJAjI7QVCgZvospjKeg_iwEr6Xui1AWGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
