@@ -43,6 +43,9 @@ public class SignupActivity extends AppCompatActivity {
             return insets;
         });
 
+        // from https://www.geeksforgeeks.org/how-to-change-the-color-of-status-bar-in-an-android-app/
+        this.getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
+
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
 
