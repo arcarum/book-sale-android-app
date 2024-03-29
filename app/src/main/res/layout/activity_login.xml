@@ -21,7 +21,7 @@
         android:autofillHints="emailAddress"
         android:ems="10"
         android:gravity="center"
-        android:hint="username@somewhere.com"
+        android:hint="Email"
         android:inputType="textEmailAddress"
         android:paddingTop="30dp" />
 
