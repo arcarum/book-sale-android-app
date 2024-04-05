@@ -25,7 +25,6 @@ public class SignupActivity extends AppCompatActivity {
     private final String TAG = "SignupActivity";
     private EditText etFirstName;
     private EditText etLastName;
-    private EditText etId;
     private EditText etEmail;
     private EditText etPassword;
     private EditText etConfirmPassword;
@@ -51,7 +50,6 @@ public class SignupActivity extends AppCompatActivity {
 
         etFirstName = findViewById(R.id.et_first_name);
         etLastName = findViewById(R.id.et_last_name);
-        etId = findViewById(R.id.et_id);
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         etConfirmPassword = findViewById(R.id.et_confirm_password);
@@ -60,14 +58,12 @@ public class SignupActivity extends AppCompatActivity {
     public void onClickSignup(View view) {
         String firstName = etFirstName.getText().toString();
         String lastName = etLastName.getText().toString();
-        String id = etId.getText().toString();
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
         String confirmPassword = etConfirmPassword.getText().toString();
 
         if(validateUserInfo(etFirstName, "Enter first name")) return;
         if(validateUserInfo(etLastName, "Enter last name")) return;
-        if(validateUserInfo(etId, "Enter id")) return;
         if(validateUserInfo(etEmail, "Enter email")) return;
         if(validateUserInfo(etPassword, "Enter password")) return;
 
@@ -93,13 +89,13 @@ public class SignupActivity extends AppCompatActivity {
         CollectionReference users = mDatabase.collection("users");
 
         Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("Email", email);
         userInfo.put("FirstName", firstName);
         userInfo.put("LastName", lastName);
-        userInfo.put("ID", id);
-        userInfo.put("Email", email);
 
-        users.document(id).set(userInfo);
+        users.document(email).set(userInfo);
         Toast.makeText(getApplicationContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
+
         finish();
     }
 

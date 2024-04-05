@@ -36,17 +36,6 @@
         android:paddingTop="30dp" />
 
     <EditText
-        android:id="@+id/et_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:importantForAutofill="no"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="ID"
-        android:inputType="text"
-        android:paddingTop="30dp" />
-
-    <EditText
         android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
