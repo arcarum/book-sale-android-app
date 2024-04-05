@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,6 +31,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private FragmentHomeBinding binding;
     private FirebaseFirestore mDatabase;
     private ListView listView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private final HashMap<Integer, Map<String, Object>> map = new HashMap<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -42,6 +45,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         mDatabase = FirebaseFirestore.getInstance();
 
         updateDisplay();
+
+        swipeRefreshLayout = binding.swipeRefreshLayout;
+
+        // from https://developer.android.com/develop/ui/views/touch-and-input/swipe/respond-refresh-request#java
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            updateDisplay();
+            Toast.makeText(getContext(), "New List Fetched", Toast.LENGTH_SHORT).show();
+        });
 
         return root;
     }
@@ -73,6 +84,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             // create and set the adapter
             SimpleAdapter adapter = new SimpleAdapter(getContext(), data, resource, from, to);
             listView.setAdapter(adapter);
+            swipeRefreshLayout.setRefreshing(false);
         });
     }
 

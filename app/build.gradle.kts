@@ -52,6 +52,10 @@ dependencies {
     //noinspection UseTomlInstead
     implementation("com.google.firebase:firebase-auth")
 
+
+    // from https://developer.android.com/develop/ui/views/touch-and-input/swipe/add-swipe-interface#kts
+    implementation(libs.swiperefreshlayout)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
