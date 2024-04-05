@@ -10,6 +10,8 @@
         <activity
             android:name=".SignupActivity"/>
         <activity
+            android:name=".ItemActivity"/>
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>

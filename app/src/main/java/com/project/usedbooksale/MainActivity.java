@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -16,8 +17,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.project.usedbooksale.databinding.ActivityMainBinding;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,12 +58,17 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String email = intent.getStringExtra("email");
 
+        if (email == null) {
+            Toast.makeText(this, "Failed to get email and name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         dataBase.collection("users").document(email)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    String fName = Objects.requireNonNull(documentSnapshot.get("FirstName")).toString();
-                    String lName = Objects.requireNonNull(documentSnapshot.get("LastName")).toString();
-                    String name = fName + lName;
+                    String fName = (String) documentSnapshot.get("FirstName");
+                    String lName = (String) documentSnapshot.get("LastName");
+                    String name = fName + " " + lName;
                     textViewName.setText(name);
                 });
         textViewEmail.setText(email);
