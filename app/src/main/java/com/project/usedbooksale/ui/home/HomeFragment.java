@@ -45,13 +45,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView.setOnItemClickListener(this);
         database = FirebaseFirestore.getInstance();
 
-        updateDisplay();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(this::updateDisplay);
 
         swipeRefreshLayout = binding.swipeRefreshLayout;
 
         // from https://developer.android.com/develop/ui/views/touch-and-input/swipe/respond-refresh-request#java
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            updateDisplay();
+            executor.execute(this::updateDisplay);
             Toast.makeText(getContext(), "New List Fetched", Toast.LENGTH_SHORT).show();
         });
 
@@ -60,8 +61,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private void updateDisplay()
     {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> database.collection("books_on_sale").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        database.collection("books_on_sale").get().addOnSuccessListener(queryDocumentSnapshots -> {
             int i = 0;
             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                 map.put(i, querySnapshot.getData());
@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             SimpleAdapter adapter = new SimpleAdapter(getContext(), data, resource, from, to);
             listView.setAdapter(adapter);
             swipeRefreshLayout.setRefreshing(false);
-        }));
+        });
     }
 
     @Override
