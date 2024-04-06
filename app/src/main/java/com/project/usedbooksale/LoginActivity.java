@@ -37,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         // from https://www.geeksforgeeks.org/how-to-change-the-color-of-status-bar-in-an-android-app/
         this.getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
 
+        setTitle("Login");
+
         mAuth = FirebaseAuth.getInstance();
 
         etEmail = findViewById(R.id.et_email);
@@ -44,10 +46,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClickLogin(View view) {
-        final String username = etEmail.getText().toString();
+        final String email = etEmail.getText().toString();
         final String password = etPassword.getText().toString();
 
-        if (username.isEmpty()) {
+        if (email.isEmpty()) {
             Snackbar.make(etEmail, "Enter an email", Snackbar.LENGTH_SHORT)
                     .setAnchorView(findViewById(R.id.btn_login))
                     .show();
@@ -60,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(username, password)
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information

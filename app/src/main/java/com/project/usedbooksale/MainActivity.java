@@ -3,6 +3,7 @@ package com.project.usedbooksale;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private TextView textViewName;
     private TextView textViewEmail;
-    private FirebaseFirestore dataBase;
+    private FirebaseFirestore database;
+    private String userEmail;
+    private String userFullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,25 +56,25 @@ public class MainActivity extends AppCompatActivity {
         textViewName = parentView.findViewById(R.id.textViewName);
         textViewEmail = parentView.findViewById(R.id.textViewEmail);
 
-        dataBase = FirebaseFirestore.getInstance();
+        database = FirebaseFirestore.getInstance();
 
         Intent intent = getIntent();
-        String email = intent.getStringExtra("email");
+        userEmail = intent.getStringExtra("email");
 
-        if (email == null) {
+        if (userEmail == null) {
             Toast.makeText(this, "Failed to get email and name", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        dataBase.collection("users").document(email)
+        database.collection("users").document(userEmail)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     String fName = (String) documentSnapshot.get("FirstName");
                     String lName = (String) documentSnapshot.get("LastName");
-                    String name = fName + " " + lName;
-                    textViewName.setText(name);
+                    userFullName = fName + " " + lName;
+                    textViewName.setText(userFullName);
                 });
-        textViewEmail.setText(email);
+        textViewEmail.setText(userEmail);
     }
 
     @Override
@@ -79,6 +82,22 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_sell_book) {
+            Intent sellBookIntent = new Intent(this, SellBookActivity.class);
+            sellBookIntent.putExtra("userEmail", userEmail);
+            sellBookIntent.putExtra("userFullName", userFullName);
+            startActivity(sellBookIntent);
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_settings) {
+            Toast.makeText(this, "Settings to be implemented in a future update!", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="30dp"
+    android:layout_marginTop="50dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginBottom="50dp"
+    android:orientation="vertical"
+    android:id="@+id/main"
+    tools:context=".SignupActivity">
+
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Title"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        android:paddingTop="30dp" />
+
+    <EditText
+        android:id="@+id/et_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Price (in AED)"
+        android:inputType="number"
+        android:paddingTop="30dp" />
+
+    <EditText
+        android:id="@+id/et_desciption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center|top"
+        android:hint="Descrption"
+        android:inputType="textMultiLine"
+        android:lines="10"
+        android:maxLines="10"
+        android:paddingTop="30dp" />
+
+    <Button
+        android:id="@+id/btn_sell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="110dp"
+        android:onClick="onClickSignup"
+        android:text="Sell Book" />
+
+</LinearLayout>

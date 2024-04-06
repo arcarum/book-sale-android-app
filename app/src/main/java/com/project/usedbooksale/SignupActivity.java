@@ -29,7 +29,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText etPassword;
     private EditText etConfirmPassword;
     private FirebaseAuth mAuth;
-    private FirebaseFirestore mDatabase;
+    private FirebaseFirestore database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +42,14 @@ public class SignupActivity extends AppCompatActivity {
             return insets;
         });
 
-        // from https://www.geeksforgeeks.org/how-to-change-the-color-of-status-bar-in-an-android-app/
+        // setting status bar color from
+        // https://www.geeksforgeeks.org/how-to-change-the-color-of-status-bar-in-an-android-app/
         this.getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
 
+        setTitle("Sign up");
+
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseFirestore.getInstance();
+        database = FirebaseFirestore.getInstance();
 
         etFirstName = findViewById(R.id.et_first_name);
         etLastName = findViewById(R.id.et_last_name);
@@ -62,10 +65,10 @@ public class SignupActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
         String confirmPassword = etConfirmPassword.getText().toString();
 
-        if(validateUserInfo(etFirstName, "Enter first name")) return;
-        if(validateUserInfo(etLastName, "Enter last name")) return;
-        if(validateUserInfo(etEmail, "Enter email")) return;
-        if(validateUserInfo(etPassword, "Enter password")) return;
+        if(validateInfo(etFirstName, "Enter first name")) return;
+        if(validateInfo(etLastName, "Enter last name")) return;
+        if(validateInfo(etEmail, "Enter email")) return;
+        if(validateInfo(etPassword, "Enter password")) return;
 
         if (confirmPassword.isEmpty() || !password.equals(confirmPassword)) {
             Snackbar.make(etConfirmPassword, "Passwords do not match", Snackbar.LENGTH_SHORT)
@@ -86,7 +89,7 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 });
 
-        CollectionReference users = mDatabase.collection("users");
+        CollectionReference users = database.collection("users");
 
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("Email", email);
@@ -99,7 +102,7 @@ public class SignupActivity extends AppCompatActivity {
         finish();
     }
 
-    private boolean validateUserInfo(EditText editText, String message) {
+    private boolean validateInfo(EditText editText, String message) {
         if (editText.getText().toString().isEmpty()) {
             Snackbar.make(editText, message, Snackbar.LENGTH_SHORT)
                     .setAnchorView(findViewById(R.id.btn_signup))
