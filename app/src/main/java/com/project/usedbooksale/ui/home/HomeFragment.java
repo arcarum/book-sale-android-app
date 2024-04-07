@@ -1,6 +1,7 @@
 package com.project.usedbooksale.ui.home;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ import com.project.usedbooksale.R;
 import com.project.usedbooksale.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -44,6 +47,12 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView = binding.listViewHome;
         listView.setOnItemClickListener(this);
         database = FirebaseFirestore.getInstance();
+
+        // set separator color from
+        // https://stackoverflow.com/questions/2372415/how-to-change-color-of-android-listview-separator-line
+        int[] colors = {0, 0xFF000000, 0};
+        listView.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
+        listView.setDividerHeight(4);
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(this::updateDisplay);
@@ -77,6 +86,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 data.add(bookInfoMap);
             }
 
+            // sort based on descending order of date
+            // from https://stackoverflow.com/questions/2373009/how-to-sort-list-of-hashmaps
+            data.sort((one, two) -> two.get("date").compareTo(one.get("date")));
+
             // create the resource, from, and to variables
             int resource = R.layout.listview_item;
             String[] from = {"date", "title", "price"};
@@ -95,7 +108,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
         intent.putExtra("date", convertTimestamp(Long.parseLong(String.valueOf(map.get(position).get("Date")))));
         intent.putExtra("title", (String) map.get(position).get("Title"));
-        //intent.putExtra("description", Objects.requireNonNull(map.get(position)).get("Title").toString());
+        intent.putExtra("price", (String) map.get(position).get("price"));
 
         this.startActivity(intent);
     }
@@ -104,7 +117,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private String convertTimestamp(long timestamp) {
         // Converting date from
         // https://stackoverflow.com/questions/18929929/convert-timestamp-into-current-date-in-android#18930056
-        return (String) DateFormat.format("MMMM dd, yyyy", timestamp);
+        return (String) DateFormat.format("MMMM dd, yyyy HH:mm:ss", timestamp);
     }
 
     @Override
