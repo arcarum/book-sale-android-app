@@ -17,14 +17,13 @@ import com.project.usedbooksale.ui.home.HomeFragment;
 
 public class UsedBookService extends Service {
 
-    private String TAG = "UsedBookService";
-    private FirebaseFirestore db;
+    private final String TAG = "UsedBookService";
 
     @Override
     public void onCreate() {
         Log.d(TAG, "Service created");
 
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = db.collection("books_on_sale");
         collectionReference.addSnapshotListener((value, error) -> {
 

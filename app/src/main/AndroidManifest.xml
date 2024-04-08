@@ -11,12 +11,7 @@
         android:theme="@style/Theme.Usedbooksale">
         <service
             android:name=".UsedBookService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+            android:enabled="true" />
 
         <activity android:name=".SellBookActivity" />
         <activity android:name=".SignupActivity" />
