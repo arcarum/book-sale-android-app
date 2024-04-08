@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private FirebaseFirestore database;
     private ListView listView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private final HashMap<Integer, Map<String, Object>> map = new HashMap<>();
+    private ArrayList<HashMap<String, String>> data;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +68,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private void updateDisplay()
     {
+        HashMap<Integer, Map<String, Object>> map = new HashMap<>();
         database.collection("books_on_sale").get().addOnSuccessListener(queryDocumentSnapshots -> {
             int i = 0;
             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
@@ -75,7 +76,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 i++;
             }
 
-            ArrayList<HashMap<String, String>> data = new ArrayList<>();
+            data = new ArrayList<>();
             for (Integer key : map.keySet()) {
                 HashMap<String, String> bookInfoMap = new HashMap<>();
                 bookInfoMap.put("title", (String) map.get(key).get("Title"));
@@ -104,9 +105,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         Intent intent = new Intent(getContext(), ItemActivity.class);
 
-        intent.putExtra("date", convertTimestamp(Long.parseLong(String.valueOf(map.get(position).get("Date")))));
-        intent.putExtra("title", (String) map.get(position).get("Title"));
-        intent.putExtra("price", (String) map.get(position).get("price"));
+        intent.putExtra("date", data.get(position).get("date"));
+        intent.putExtra("title", data.get(position).get("title"));
+        intent.putExtra("price", data.get(position).get("price"));
 
         this.startActivity(intent);
     }
