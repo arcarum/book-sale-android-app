@@ -82,6 +82,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 bookInfoMap.put("title", (String) map.get(key).get("Title"));
                 bookInfoMap.put("date", convertTimestamp(Long.parseLong(String.valueOf(map.get(key).get("Date")))));
                 bookInfoMap.put("price", map.get(key).get("Price") + " AED");
+                bookInfoMap.put("desc", (String) map.get(key).get("Description"));
+                bookInfoMap.put("email", (String) map.get(key).get("Email"));
+                bookInfoMap.put("name", (String) map.get(key).get("Name"));
                 data.add(bookInfoMap);
             }
 
@@ -108,6 +111,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         intent.putExtra("date", data.get(position).get("date"));
         intent.putExtra("title", data.get(position).get("title"));
         intent.putExtra("price", data.get(position).get("price"));
+        intent.putExtra("desc", data.get(position).get("desc"));
+        intent.putExtra("name", data.get(position).get("name"));
+        intent.putExtra("email", data.get(position).get("email"));
 
         this.startActivity(intent);
     }

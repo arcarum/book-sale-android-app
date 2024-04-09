@@ -18,6 +18,7 @@ import com.project.usedbooksale.ui.home.HomeFragment;
 public class UsedBookService extends Service {
 
     private final String TAG = "UsedBookService";
+    private boolean firstTimeOpeningApp = true;
 
     @Override
     public void onCreate() {
@@ -26,6 +27,11 @@ public class UsedBookService extends Service {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = db.collection("books_on_sale");
         collectionReference.addSnapshotListener((value, error) -> {
+
+            if (firstTimeOpeningApp) {
+                firstTimeOpeningApp = false;
+                return;
+            }
 
             if (error != null) {
                 Log.w(TAG, "Listen failed.", error);

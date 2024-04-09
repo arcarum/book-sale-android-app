@@ -13,9 +13,11 @@ public class ItemActivity extends Activity {
         setContentView(R.layout.activity_item);
         
         // get references to widgets
-        TextView titleTextView = findViewById(R.id.titleTextView);
-        TextView dateTextView = findViewById(R.id.dateTextView);
-        TextView descriptionTextView = findViewById(R.id.descriptionTextView);
+        TextView titleTextView = findViewById(R.id.itemTitleTextView);
+        TextView dateTextView = findViewById(R.id.itemDateTextView);
+        TextView descriptionTextView = findViewById(R.id.itemDescTextView);
+        TextView priceTextView = findViewById(R.id.itemPriceTextView);
+        TextView sellerTextView = findViewById(R.id.itemSellerTextView);
         
         // get the intent
         Intent intent = getIntent();
@@ -23,11 +25,14 @@ public class ItemActivity extends Activity {
         // get data from the intent
         String date = intent.getStringExtra("date");
         String title = intent.getStringExtra("title");
-        String description = intent.getStringExtra("description");
-        
-        // display data on the widgets
-        dateTextView.setText(date);
+        String description = intent.getStringExtra("desc");
+        String price = intent.getStringExtra("price");
+        String seller = intent.getStringExtra("name");
+
         titleTextView.setText(title);
+        dateTextView.setText(date);
         descriptionTextView.setText(description);
+        priceTextView.setText(price);
+        sellerTextView.setText(seller);
     }
 }
