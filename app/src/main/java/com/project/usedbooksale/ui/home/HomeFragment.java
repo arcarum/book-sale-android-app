@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -35,6 +37,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private ListView listView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<HashMap<String, String>> data;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +55,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
         listView.setDividerHeight(4);
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+        ExecutorService executor = Executors.newCachedThreadPool();
         executor.execute(this::updateDisplay);
 
         swipeRefreshLayout = binding.swipeRefreshLayout;
@@ -62,6 +65,19 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             executor.execute(this::updateDisplay);
             Toast.makeText(getContext(), "New List Fetched", Toast.LENGTH_SHORT).show();
         });
+
+        // Update Display when coming back from an intent if needed
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == 0) {
+                        Intent intent = result.getData();
+                        if (intent == null) return;
+                        boolean shouldDisplayUpdate = intent.getBooleanExtra("updateDisplay", false);
+                        if (shouldDisplayUpdate) {
+                            updateDisplay();
+                        }
+                    }
+                });
 
         return root;
     }
@@ -81,6 +97,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 HashMap<String, String> bookInfoMap = new HashMap<>();
                 bookInfoMap.put("title", (String) map.get(key).get("Title"));
                 bookInfoMap.put("date", convertTimestamp(Long.parseLong(String.valueOf(map.get(key).get("Date")))));
+                bookInfoMap.put("timeInMilliSec", String.valueOf(map.get(key).get("Date")));
                 bookInfoMap.put("price", map.get(key).get("Price") + " AED");
                 bookInfoMap.put("desc", (String) map.get(key).get("Description"));
                 bookInfoMap.put("email", (String) map.get(key).get("Email"));
@@ -114,8 +131,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         intent.putExtra("desc", data.get(position).get("desc"));
         intent.putExtra("name", data.get(position).get("name"));
         intent.putExtra("email", data.get(position).get("email"));
+        intent.putExtra("timeInMilliSec", data.get(position).get("timeInMilliSec"));
 
-        this.startActivity(intent);
+        activityResultLauncher.launch(intent);
     }
 
 

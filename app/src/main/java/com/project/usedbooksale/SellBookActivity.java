@@ -28,6 +28,7 @@ public class SellBookActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private String userEmail;
     private String userFullName;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class SellBookActivity extends AppCompatActivity {
 
         database = FirebaseFirestore.getInstance();
 
-        Intent intent = getIntent();
+        intent = getIntent();
         userEmail = intent.getStringExtra("userEmail");
         userFullName = intent.getStringExtra("userFullName");
 
@@ -82,11 +83,15 @@ public class SellBookActivity extends AppCompatActivity {
         bookInfo.put("Description", description);
         bookInfo.put("Name", userFullName);
         bookInfo.put("Email", userEmail);
-        bookInfo.put("Date", System.currentTimeMillis());
 
-        books.add(bookInfo);
+        long date = System.currentTimeMillis();
+        bookInfo.put("Date", date);
+
+        books.document(date + userEmail).set(bookInfo);
         Toast.makeText(getApplicationContext(), "Book sold successfully", Toast.LENGTH_SHORT).show();
-
+        
+        intent.putExtra("updateDisplay", true);
+        setResult(/*request code*/ 0, intent);
         finish();
     }
 
