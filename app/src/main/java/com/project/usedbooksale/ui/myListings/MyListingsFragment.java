@@ -1,4 +1,4 @@
-package com.project.usedbooksale.ui.gallery;
+package com.project.usedbooksale.ui.myListings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,24 +8,21 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.project.usedbooksale.databinding.FragmentGalleryBinding;
+import com.project.usedbooksale.databinding.FragmentMyListingsBinding;
 
-public class GalleryFragment extends Fragment {
+public class MyListingsFragment extends Fragment {
 
-    private FragmentGalleryBinding binding;
+    private FragmentMyListingsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        GalleryViewModel galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
 
-        binding = FragmentGalleryBinding.inflate(inflater, container, false);
+        binding = FragmentMyListingsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textGallery;
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        textView.setText("Work in progress");
         return root;
     }
 

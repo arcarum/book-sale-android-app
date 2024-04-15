@@ -61,8 +61,8 @@ public class SellBookActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Sell Book")
                 .setMessage("Are you sure you want to sell this book?")
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> sellBook())
-                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton("Yes", (dialog, which) -> sellBook())
+                .setNegativeButton("No", null)
                 .show();
     }
 
