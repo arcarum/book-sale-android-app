@@ -7,12 +7,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -58,7 +58,8 @@ public class SellBookActivity extends AppCompatActivity {
     public void onClickSignup(View view) {
 
         // Alert Dialog from https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
+                .setIcon(R.drawable.alert_info)
                 .setTitle("Sell Book")
                 .setMessage("Are you sure you want to sell this book?")
                 .setPositiveButton("Yes", (dialog, which) -> sellBook())

@@ -9,11 +9,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -52,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         final String password = etPassword.getText().toString();
 
         if (email.isEmpty() || password.isEmpty()) {
+            textViewError.setText("Please enter the email and password.");
             textViewError.setVisibility(View.VISIBLE);
             return;
         } else {
@@ -59,20 +64,20 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        mainActivityIntent.putExtra("email", user.getEmail());
-                        startActivity(mainActivityIntent);
-                        finish();
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        textViewError.setVisibility(View.VISIBLE);
-                    }
+                .addOnSuccessListener(authResult -> {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithEmail:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    mainActivityIntent.putExtra("email", user.getEmail());
+                    startActivity(mainActivityIntent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithEmail:failure");
+                    textViewError.setText("Invalid email or password.");
+                    textViewError.setVisibility(View.VISIBLE);
                 });
     }
 

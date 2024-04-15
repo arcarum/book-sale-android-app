@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -79,7 +80,8 @@ public class ItemActivity extends AppCompatActivity {
 
     public void onClickRemoveListing(View view) {
 
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
+                .setIcon(R.drawable.alert_warning)
                 .setTitle("Remove Listing")
                 .setMessage("Are you sure you want to stop selling this book?")
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> removeListing())
