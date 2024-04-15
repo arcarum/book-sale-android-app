@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,7 +14,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
     private EditText etEmail, etPassword;
     private FirebaseAuth mAuth;
+    private TextView textViewError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // from https://www.geeksforgeeks.org/how-to-change-the-color-of-status-bar-in-an-android-app/
-        this.getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
 
         setTitle("Login");
 
@@ -43,23 +44,18 @@ public class LoginActivity extends AppCompatActivity {
 
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
+        textViewError = findViewById(R.id.textViewError);
     }
 
     public void onClickLogin(View view) {
         final String email = etEmail.getText().toString();
         final String password = etPassword.getText().toString();
 
-        if (email.isEmpty()) {
-            Snackbar.make(etEmail, "Enter an email", Snackbar.LENGTH_SHORT)
-                    .setAnchorView(findViewById(R.id.btn_login))
-                    .show();
+        if (email.isEmpty() || password.isEmpty()) {
+            textViewError.setVisibility(View.VISIBLE);
             return;
-        }
-        if (password.isEmpty()) {
-            Snackbar.make(etEmail, "Enter a password", Snackbar.LENGTH_SHORT)
-                    .setAnchorView(findViewById(R.id.btn_login))
-                    .show();
-            return;
+        } else {
+            textViewError.setVisibility(View.GONE);
         }
 
         mAuth.signInWithEmailAndPassword(email, password)

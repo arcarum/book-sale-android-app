@@ -44,7 +44,7 @@ public class SignupActivity extends AppCompatActivity {
 
         // setting status bar color from
         // https://www.geeksforgeeks.org/how-to-change-the-color-of-status-bar-in-an-android-app/
-        this.getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
 
         setTitle("Sign up");
 
