@@ -84,8 +84,8 @@ public class ItemActivity extends AppCompatActivity {
                 .setIcon(R.drawable.alert_warning)
                 .setTitle("Remove Listing")
                 .setMessage("Are you sure you want to stop selling this book?")
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> removeListing())
-                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton("Yes", (dialog, which) -> removeListing())
+                .setNegativeButton("No", null)
                 .show();
     }
 
