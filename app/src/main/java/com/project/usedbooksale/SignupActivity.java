@@ -4,15 +4,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,6 +32,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText etEmail;
     private EditText etPassword;
     private EditText etConfirmPassword;
+    private TextView textViewError;
     private FirebaseAuth mAuth;
     private FirebaseFirestore database;
 
@@ -56,6 +61,7 @@ public class SignupActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         etConfirmPassword = findViewById(R.id.et_confirm_password);
+        textViewError = findViewById(R.id.textViewError);
     }
 
     public void onClickSignup(View view) {
@@ -65,50 +71,43 @@ public class SignupActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
         String confirmPassword = etConfirmPassword.getText().toString();
 
-        if(validateInfo(etFirstName, "Enter first name")) return;
-        if(validateInfo(etLastName, "Enter last name")) return;
-        if(validateInfo(etEmail, "Enter email")) return;
-        if(validateInfo(etPassword, "Enter password")) return;
-
-        if (confirmPassword.isEmpty() || !password.equals(confirmPassword)) {
-            Snackbar.make(etConfirmPassword, "Passwords do not match", Snackbar.LENGTH_SHORT)
-                    .setAnchorView(findViewById(R.id.btn_signup))
-                    .show();
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()
+                || password.isEmpty() || confirmPassword.isEmpty()) {
+            textViewError.setText("Please fill all the fields.");
+            textViewError.setVisibility(View.VISIBLE);
             return;
+        } else if (!password.equals(confirmPassword)) {
+            textViewError.setText("Passwords do not match.");
+            textViewError.setVisibility(View.VISIBLE);
+            return;
+        } else if (password.length() < 6 && confirmPassword.length() < 6) {
+            textViewError.setText("Password length must be greater than 6.");
+            textViewError.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            textViewError.setVisibility(View.GONE);
         }
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign up success, update UI with the signed-in user's information
-                        Toast.makeText(getApplicationContext(), "Create User With Email : success\nPlease login",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        // If sign up fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    }
+                .addOnSuccessListener(authResult -> {
+                    CollectionReference users = database.collection("users");
+
+                    Map<String, Object> userInfo = new HashMap<>();
+                    userInfo.put("Email", email);
+                    userInfo.put("FirstName", firstName);
+                    userInfo.put("LastName", lastName);
+
+                    users.document(email).set(userInfo);
+
+                    Toast.makeText(getApplicationContext(),
+                            "Account created successfully\nPlease login",
+                            Toast.LENGTH_SHORT).show();
+
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    textViewError.setText("Sign up failed. Please re-enter the correct details.");
+                    textViewError.setVisibility(View.VISIBLE);
                 });
-
-        CollectionReference users = database.collection("users");
-
-        Map<String, Object> userInfo = new HashMap<>();
-        userInfo.put("Email", email);
-        userInfo.put("FirstName", firstName);
-        userInfo.put("LastName", lastName);
-
-        users.document(email).set(userInfo);
-        Toast.makeText(getApplicationContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
-
-        finish();
-    }
-
-    private boolean validateInfo(EditText editText, String message) {
-        if (editText.getText().toString().isEmpty()) {
-            Snackbar.make(editText, message, Snackbar.LENGTH_SHORT)
-                    .setAnchorView(findViewById(R.id.btn_signup))
-                    .show();
-            return true;
-        }
-        return false;
     }
 }
