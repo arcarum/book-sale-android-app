@@ -41,7 +41,7 @@ public class SellBookActivity extends AppCompatActivity {
             return insets;
         });
 
-        this.getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
         setTitle("Sell Book");
 
         database = FirebaseFirestore.getInstance();
