@@ -52,6 +52,8 @@ dependencies {
     //noinspection UseTomlInstead
     implementation("com.google.firebase:firebase-auth")
 
+    // from https://www.digitalocean.com/community/tutorials/android-material-text-fields
+    implementation(libs.material.v150)
 
     // from https://developer.android.com/develop/ui/views/touch-and-input/swipe/add-swipe-interface#kts
     implementation(libs.swiperefreshlayout)
