@@ -89,8 +89,6 @@ public class ItemActivity extends Activity {
                         Toast.LENGTH_SHORT).show());
 
         Toast.makeText(getApplicationContext(), "Listing removed successfully", Toast.LENGTH_SHORT).show();
-        intent.putExtra("updateDisplay", true);
-        setResult(/*request code*/ 0, intent);
         finish();
     }
 }

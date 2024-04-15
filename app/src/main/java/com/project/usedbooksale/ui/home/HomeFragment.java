@@ -13,12 +13,12 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.project.usedbooksale.ItemActivity;
 import com.project.usedbooksale.R;
@@ -37,7 +37,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private ListView listView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<HashMap<String, String>> data;
-    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private ExecutorService executor;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
         listView.setDividerHeight(4);
 
-        ExecutorService executor = Executors.newCachedThreadPool();
+        executor = Executors.newCachedThreadPool();
         executor.execute(this::updateDisplay);
 
         swipeRefreshLayout = binding.swipeRefreshLayout;
@@ -66,26 +66,19 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             Toast.makeText(getContext(), "New List Fetched", Toast.LENGTH_SHORT).show();
         });
 
-        // Update Display when coming back from an intent if needed
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == 0) {
-                        Intent intent = result.getData();
-                        if (intent == null) return;
-                        boolean shouldDisplayUpdate = intent.getBooleanExtra("updateDisplay", false);
-                        if (shouldDisplayUpdate) {
-                            updateDisplay();
-                        }
-                    }
-                });
-
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        executor.execute(this::updateDisplay);
     }
 
     private void updateDisplay()
     {
         HashMap<Integer, Map<String, Object>> map = new HashMap<>();
-        database.collection("books_on_sale").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        (database.collection("books_on_sale").orderBy("Date", Query.Direction.DESCENDING)).get().addOnSuccessListener(queryDocumentSnapshots -> {
             int i = 0;
             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                 map.put(i, querySnapshot.getData());
@@ -104,10 +97,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 bookInfoMap.put("name", (String) map.get(key).get("Name"));
                 data.add(bookInfoMap);
             }
-
-            // sort based on descending order of date
-            // from https://stackoverflow.com/questions/2373009/how-to-sort-list-of-hashmaps
-            data.sort((one, two) -> two.get("date").compareTo(one.get("date")));
 
             // create the resource, from, and to variables
             int resource = R.layout.listview_item;
@@ -133,7 +122,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         intent.putExtra("email", data.get(position).get("email"));
         intent.putExtra("timeInMilliSec", data.get(position).get("timeInMilliSec"));
 
-        activityResultLauncher.launch(intent);
+        startActivity(intent);
     }
 
 
