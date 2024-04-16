@@ -88,13 +88,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onResume() {
         super.onResume();
-        if (!searchView.getQuery().toString().isEmpty()) {
-            executor.execute(this::updateDisplay);
+        executor.execute(this::updateDisplay);
 
-            // from
-            // https://stackoverflow.com/questions/14426769/how-to-change-android-searchview-text
-            searchView.setQuery("", false);
-        }
+        // from
+        // https://stackoverflow.com/questions/14426769/how-to-change-android-searchview-text
+        searchView.setQuery("", false);
     }
 
     private void updateDisplay()
