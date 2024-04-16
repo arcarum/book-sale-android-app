@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -25,7 +26,6 @@ import com.project.usedbooksale.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,8 +34,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private FragmentHomeBinding binding;
     private FirebaseFirestore database;
     private ListView listView;
+    private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<HashMap<String, String>> data;
+    private ArrayList<HashMap<String, String>> filteredData;
     private ExecutorService executor;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -65,18 +67,39 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             Toast.makeText(getContext(), "New List Fetched", Toast.LENGTH_SHORT).show();
         });
 
+        searchView = binding.searchView;
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                updateDisplay(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                updateDisplay(newText);
+                return false;
+            }
+        });
+
         return root;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        executor.execute(this::updateDisplay);
+        if (!searchView.getQuery().toString().isEmpty()) {
+            executor.execute(this::updateDisplay);
+
+            // from
+            // https://stackoverflow.com/questions/14426769/how-to-change-android-searchview-text
+            searchView.setQuery("", false);
+        }
     }
 
     private void updateDisplay()
     {
-        (database.collection("books_on_sale").orderBy("Date", Query.Direction.DESCENDING)).get().addOnSuccessListener(queryDocumentSnapshots -> {
+        database.collection("books_on_sale").orderBy("Date", Query.Direction.DESCENDING).get().addOnSuccessListener(queryDocumentSnapshots -> {
             data = new ArrayList<>();
             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                 HashMap<String, String> bookInfoMap = new HashMap<>();
@@ -102,17 +125,51 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         });
     }
 
+    private void updateDisplay(String title)
+    {
+        filteredData = new ArrayList<>();
+        if (!title.isEmpty()) {
+            title = title.toLowerCase();
+            for (HashMap<String, String> info : data) {
+                if (info.get("title") != null && info.get("title").toLowerCase().contains(title)) {
+                    HashMap<String, String> bookInfoMap = new HashMap<>(info);
+                    filteredData.add(bookInfoMap);
+                }
+            }
+        } else if (data != null) {
+            filteredData = data;
+        } else {
+            return;
+        }
+
+        // create the resource, from, and to variables
+        int resource = R.layout.listview_item;
+        String[] from = {"date", "title", "price"};
+        int[] to = { R.id.textViewDate, R.id.textViewTitle, R.id.textViewPrice};
+
+        // create and set the adapter
+        SimpleAdapter adapter = new SimpleAdapter(getContext(), filteredData, resource, from, to);
+        listView.setAdapter(adapter);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         Intent intent = new Intent(getContext(), ItemActivity.class);
 
-        intent.putExtra("date", data.get(position).get("date"));
-        intent.putExtra("title", data.get(position).get("title"));
-        intent.putExtra("price", data.get(position).get("price"));
-        intent.putExtra("desc", data.get(position).get("desc"));
-        intent.putExtra("name", data.get(position).get("name"));
-        intent.putExtra("email", data.get(position).get("email"));
-        intent.putExtra("timeInMilliSec", data.get(position).get("timeInMilliSec"));
+        ArrayList<HashMap<String, String>> info;
+        if (!searchView.getQuery().toString().isEmpty()) {
+            info = filteredData;
+        } else {
+            info = data;
+        }
+
+        intent.putExtra("date", info.get(position).get("date"));
+        intent.putExtra("title", info.get(position).get("title"));
+        intent.putExtra("price", info.get(position).get("price"));
+        intent.putExtra("desc", info.get(position).get("desc"));
+        intent.putExtra("name", info.get(position).get("name"));
+        intent.putExtra("email", info.get(position).get("email"));
+        intent.putExtra("timeInMilliSec", info.get(position).get("timeInMilliSec"));
 
         startActivity(intent);
     }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        // Set name and email in navigation view
         database.collection("users").document(userEmail)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -86,16 +88,29 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SearchView searchView = findViewById(R.id.search_view);
         if (item.getItemId() == R.id.menu_sell_book) {
             Intent sellBookIntent = new Intent(this, SellBookActivity.class);
             sellBookIntent.putExtra("userEmail", userEmail);
             sellBookIntent.putExtra("userFullName", userFullName);
+
+            searchView.setQuery("", false);
+
             startActivity(sellBookIntent);
             return true;
         }
         if (item.getItemId() == R.id.menu_settings) {
             Toast.makeText(this, "Settings to be implemented in a future update!", Toast.LENGTH_SHORT).show();
             return true;
+        }
+        if (item.getItemId() == R.id.menu_search) {
+            if (searchView.getVisibility() == View.VISIBLE) {
+                searchView.setVisibility(View.GONE);
+
+                searchView.setQuery("", false);
+            } else {
+                searchView.setVisibility(View.VISIBLE);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
