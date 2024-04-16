@@ -76,24 +76,17 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private void updateDisplay()
     {
-        HashMap<Integer, Map<String, Object>> map = new HashMap<>();
         (database.collection("books_on_sale").orderBy("Date", Query.Direction.DESCENDING)).get().addOnSuccessListener(queryDocumentSnapshots -> {
-            int i = 0;
-            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
-                map.put(i, querySnapshot.getData());
-                i++;
-            }
-
             data = new ArrayList<>();
-            for (Integer key : map.keySet()) {
+            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                 HashMap<String, String> bookInfoMap = new HashMap<>();
-                bookInfoMap.put("title", (String) map.get(key).get("Title"));
-                bookInfoMap.put("date", convertTimestamp(Long.parseLong(String.valueOf(map.get(key).get("Date")))));
-                bookInfoMap.put("timeInMilliSec", String.valueOf(map.get(key).get("Date")));
-                bookInfoMap.put("price", map.get(key).get("Price") + " AED");
-                bookInfoMap.put("desc", (String) map.get(key).get("Description"));
-                bookInfoMap.put("email", (String) map.get(key).get("Email"));
-                bookInfoMap.put("name", (String) map.get(key).get("Name"));
+                bookInfoMap.put("title", (String) querySnapshot.getData().get("Title"));
+                bookInfoMap.put("date", convertTimestamp(Long.parseLong(String.valueOf(querySnapshot.getData().get("Date")))));
+                bookInfoMap.put("timeInMilliSec", String.valueOf(querySnapshot.getData().get("Date")));
+                bookInfoMap.put("price", querySnapshot.getData().get("Price") + " AED");
+                bookInfoMap.put("desc", (String) querySnapshot.getData().get("Description"));
+                bookInfoMap.put("email", (String) querySnapshot.getData().get("Email"));
+                bookInfoMap.put("name", (String) querySnapshot.getData().get("Name"));
                 data.add(bookInfoMap);
             }
 
