@@ -16,9 +16,9 @@
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         app:srcCompat="@drawable/ic_menu_home"
-        app:tint="@color/primary_blue" />
+        app:tint="@color/md_theme_light_primary" />
 
     <TextView
         android:id="@+id/textView"
@@ -68,7 +68,7 @@
         android:textColor="#FF3C3C"
         android:textStyle="bold" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

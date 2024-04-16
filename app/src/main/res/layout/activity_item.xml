@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="vertical" >
 
 
@@ -19,22 +20,19 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
             android:layout_marginBottom="12dp"
-            android:textColorHint="@color/black"
             android:hint="Title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/itemTitleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:textColor="@color/black"
-                android:textStyle="bold"
                 android:clickable="false"
                 android:focusable="false"
+                android:inputType="none"
                 android:longClickable="false"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -42,7 +40,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:textColorHint="@color/black"
             android:hint="Sold by">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -50,7 +47,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:clickable="false"
                 android:focusable="false"
@@ -69,8 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:layout_weight="1"
-                android:hint="Listed on"
-                android:textColorHint="@color/black">
+                android:hint="Listed on">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/itemDateTextView"
@@ -81,7 +76,6 @@
                     android:focusable="false"
                     android:inputType="none"
                     android:longClickable="false"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -93,8 +87,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginBottom="12dp"
                 android:layout_weight="1"
-                android:hint="Price"
-                android:textColorHint="@color/black">
+                android:hint="Price">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/itemPriceTextView"
@@ -104,7 +97,6 @@
                     android:focusable="false"
                     android:inputType="none"
                     android:longClickable="false"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -115,7 +107,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:textColorHint="@color/black"
             android:hint="Description">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -129,7 +120,6 @@
                 android:lines="5"
                 android:longClickable="false"
                 android:maxLines="5"
-                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>

@@ -30,7 +30,6 @@ public class ItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_item);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -47,7 +46,6 @@ public class ItemActivity extends AppCompatActivity {
 
         Button removeListingButton = findViewById(R.id.removeListingButton);
 
-        getWindow().setStatusBarColor(getResources().getColor(R.color.dark_blue, getTheme()));
         setTitle("Book Details");
         
         // get the intent
