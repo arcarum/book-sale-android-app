@@ -12,18 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <SearchView
-            android:id="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
-            android:iconifiedByDefault="false"
-            android:queryHint="Search for a title"
-            android:visibility="gone" />
-
         <ListView
             android:id="@+id/listViewHome"
             android:layout_width="match_parent"

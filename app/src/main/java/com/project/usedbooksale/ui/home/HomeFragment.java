@@ -5,16 +5,20 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +38,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private FragmentHomeBinding binding;
     private FirebaseFirestore database;
     private ListView listView;
-    private SearchView searchView;
+    private View searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<HashMap<String, String>> data;
     private ArrayList<HashMap<String, String>> filteredData;
@@ -67,20 +71,42 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             Toast.makeText(getContext(), "New List Fetched", Toast.LENGTH_SHORT).show();
         });
 
-        searchView = binding.searchView;
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        // from https://stackoverflow.com/questions/77487488/how-to-change-deprecated-onprepareoptionsmenu
+        // and https://stackoverflow.com/questions/35802924/android-searchview-setonquerytextlistener-not-working
+        // set the searchview
+        requireActivity().addMenuProvider(new MenuProvider() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                updateDisplay(query);
-                return false;
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                /* Do nothing */
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                updateDisplay(newText);
+            public void onPrepareMenu(@NonNull Menu menu) {
+                MenuItem item = menu.findItem(R.id.menu_search);
+                searchView = item.getActionView();
+                if (searchView != null) {
+                    ((androidx.appcompat.widget.SearchView) searchView).setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            updateDisplay(query);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            updateDisplay(newText);
+                            return false;
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                /* Do nothing */
                 return false;
             }
-        });
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         return root;
     }
@@ -89,10 +115,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onResume() {
         super.onResume();
         executor.execute(this::updateDisplay);
-
-        // from
-        // https://stackoverflow.com/questions/14426769/how-to-change-android-searchview-text
-        searchView.setQuery("", false);
     }
 
     private void updateDisplay()
@@ -155,7 +177,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         Intent intent = new Intent(getContext(), ItemActivity.class);
 
         ArrayList<HashMap<String, String>> info;
-        if (!searchView.getQuery().toString().isEmpty()) {
+        if (searchView != null &&
+                !((androidx.appcompat.widget.SearchView) searchView).getQuery().toString().isEmpty()) {
             info = filteredData;
         } else {
             info = data;
