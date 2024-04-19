@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -43,6 +44,7 @@ public class MyListingsFragment extends Fragment implements AdapterView.OnItemCl
     private ArrayList<HashMap<String, String>> data;
     private ArrayList<HashMap<String, String>> filteredData;
     private ExecutorService executor;
+    private String userEmail;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +55,12 @@ public class MyListingsFragment extends Fragment implements AdapterView.OnItemCl
         listView = binding.listViewHome;
         listView.setOnItemClickListener(this);
         database = FirebaseFirestore.getInstance();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        } else {
+            userEmail = "";
+        }
 
         // set separator color from
         // https://stackoverflow.com/questions/2372415/how-to-change-color-of-android-listview-separator-line
@@ -88,7 +96,7 @@ public class MyListingsFragment extends Fragment implements AdapterView.OnItemCl
                     ((androidx.appcompat.widget.SearchView) searchView).setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(String query) {
-                            updateDisplay(query);
+                            /* Do nothing */
                             return false;
                         }
 
@@ -119,7 +127,11 @@ public class MyListingsFragment extends Fragment implements AdapterView.OnItemCl
 
     private void updateDisplay()
     {
-        database.collection("books_on_sale").orderBy("Date", Query.Direction.DESCENDING).get().addOnSuccessListener(queryDocumentSnapshots -> {
+        database.collection("books_on_sale")
+                .whereEqualTo("Email", userEmail)
+                .orderBy("Date", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
             data = new ArrayList<>();
             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                 HashMap<String, String> bookInfoMap = new HashMap<>();

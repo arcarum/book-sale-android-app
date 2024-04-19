@@ -10,7 +10,7 @@ public class UsedBookApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //DynamicColors.applyToActivitiesIfAvailable(this);
+        DynamicColors.applyToActivitiesIfAvailable(this);
         Intent service = new Intent(this, UsedBookService.class);
         startService(service);
     }

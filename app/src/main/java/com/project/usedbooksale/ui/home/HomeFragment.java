@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                     ((androidx.appcompat.widget.SearchView) searchView).setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(String query) {
-                            updateDisplay(query);
+                            /* Do nothing */
                             return false;
                         }
 
@@ -119,7 +119,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private void updateDisplay()
     {
-        database.collection("books_on_sale").orderBy("Date", Query.Direction.DESCENDING).get().addOnSuccessListener(queryDocumentSnapshots -> {
+        database.collection("books_on_sale")
+                .orderBy("Date", Query.Direction.DESCENDING)
+                .get().addOnSuccessListener(queryDocumentSnapshots -> {
             data = new ArrayList<>();
             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                 HashMap<String, String> bookInfoMap = new HashMap<>();

@@ -5,19 +5,20 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.project.usedbooksale.databinding.ActivityMainBinding;
 
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    private FirebaseAuth auth;
     private TextView textViewName;
     private TextView textViewEmail;
     private FirebaseFirestore database;
@@ -59,14 +61,9 @@ public class MainActivity extends AppCompatActivity {
         textViewEmail = parentView.findViewById(R.id.textViewEmail);
 
         database = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
-        Intent intent = getIntent();
-        userEmail = intent.getStringExtra("email");
-
-        if (userEmail == null) {
-            Toast.makeText(this, "Failed to get email and name", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        userEmail = auth.getCurrentUser().getEmail();
 
         // Set name and email in navigation view
         database.collection("users").document(userEmail)
@@ -78,6 +75,24 @@ public class MainActivity extends AppCompatActivity {
                     textViewName.setText(userFullName);
                 });
         textViewEmail.setText(userEmail);
+
+        // from
+        // https://stackoverflow.com/questions/62773966/setting-onclick-for-navigationdrawer-items-in-android
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.nav_logout) {
+                new MaterialAlertDialogBuilder(this)
+                        .setIcon(R.drawable.alert_info)
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to Logout?")
+                        .setPositiveButton("Yes", (dialog, which) -> logout())
+                        .setNegativeButton("No", null)
+                        .show();
+            } else {
+                NavigationUI.onNavDestinationSelected(menuItem, navController);
+                drawer.closeDrawer(GravityCompat.START);
+            }
+            return false;
+        });
     }
 
     @Override
@@ -109,5 +124,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    private void logout() {
+        auth.signOut();
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
+        Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show();
     }
 }
