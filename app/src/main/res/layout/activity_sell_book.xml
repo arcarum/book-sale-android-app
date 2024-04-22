@@ -57,6 +57,16 @@
             android:maxLines="10" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/sell_book_text_view_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Error message."
+        android:visibility="gone"
+        android:textColor="#FF3C3C"
+        android:textStyle="bold" />
+
     <Button
         android:id="@+id/btn_sell"
         android:layout_width="match_parent"

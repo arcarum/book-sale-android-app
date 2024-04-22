@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +13,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -24,6 +24,7 @@ public class SellBookActivity extends AppCompatActivity {
     private EditText etTitle;
     private EditText etPrice;
     private EditText etDescription;
+    private TextView textViewError;
     private FirebaseFirestore database;
     private String userEmail;
     private String userFullName;
@@ -50,9 +51,21 @@ public class SellBookActivity extends AppCompatActivity {
         etTitle = findViewById(R.id.et_title);
         etPrice = findViewById(R.id.et_price);
         etDescription = findViewById(R.id.et_desciption);
+        textViewError = findViewById(R.id.sell_book_text_view_error);
     }
 
     public void onClickSignup(View view) {
+        String title = etTitle.getText().toString();
+        String price = etPrice.getText().toString();
+        String description = etDescription.getText().toString();
+
+        if (title.isEmpty() || price.isEmpty() || description.isEmpty()) {
+            textViewError.setText("Please fill all the fields.");
+            textViewError.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            textViewError.setVisibility(View.GONE);
+        }
 
         // Alert Dialog from https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android
         new MaterialAlertDialogBuilder(this)
@@ -68,10 +81,6 @@ public class SellBookActivity extends AppCompatActivity {
         String title = etTitle.getText().toString();
         String price = etPrice.getText().toString();
         String description = etDescription.getText().toString();
-
-        if(validateInfo(etTitle, "Enter the title of the book")) return;
-        if(validateInfo(etPrice, "Enter the price")) return;
-        if(validateInfo(etDescription, "Enter the description")) return;
 
         CollectionReference books = database.collection("books_on_sale");
 
@@ -91,15 +100,5 @@ public class SellBookActivity extends AppCompatActivity {
         intent.putExtra("updateDisplay", true);
         setResult(/*request code*/ 0, intent);
         finish();
-    }
-
-    private boolean validateInfo(EditText editText, String message) {
-        if (editText.getText().toString().isEmpty()) {
-            Snackbar.make(editText, message, Snackbar.LENGTH_SHORT)
-                    .setAnchorView(findViewById(R.id.btn_signup))
-                    .show();
-            return true;
-        }
-        return false;
     }
 }
