@@ -14,7 +14,7 @@
             android:enabled="true" />
         <activity android:name=".SellBookActivity" />
         <activity android:name=".SignupActivity" />
-        <activity android:name=".ItemActivity" />
+        <activity android:name=".BookDetailsActivity" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">

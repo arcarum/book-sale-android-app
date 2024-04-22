@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.project.usedbooksale.ItemActivity;
+import com.project.usedbooksale.BookDetailsActivity;
 import com.project.usedbooksale.R;
 import com.project.usedbooksale.databinding.FragmentMyListingsBinding;
 
@@ -186,7 +186,7 @@ public class MyListingsFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-        Intent intent = new Intent(getContext(), ItemActivity.class);
+        Intent intent = new Intent(getContext(), BookDetailsActivity.class);
 
         ArrayList<HashMap<String, String>> info;
         if (searchView != null &&
