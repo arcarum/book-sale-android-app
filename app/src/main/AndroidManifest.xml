@@ -12,6 +12,7 @@
         <service
             android:name=".UsedBookService"
             android:enabled="true" />
+
         <activity android:name=".SellBookActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".BookDetailsActivity" />
@@ -26,7 +27,12 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
