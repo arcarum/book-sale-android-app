@@ -20,7 +20,6 @@ import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private final String TAG = "SignupActivity";
     private EditText etFirstName;
     private EditText etLastName;
     private EditText etEmail;
