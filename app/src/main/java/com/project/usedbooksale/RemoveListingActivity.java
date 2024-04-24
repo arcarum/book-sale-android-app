@@ -57,6 +57,14 @@ public class RemoveListingActivity extends AppCompatActivity {
     }
 
     public void onClickRemoveListing(View view) {
+
+        if (priceEditText.getVisibility() == View.VISIBLE && priceEditText.getEditText().getText().toString().isEmpty()) {
+            priceEditText.setError("Enter the amount you sold the item");
+            return;
+        } else {
+            priceEditText.setError(null);
+        }
+
         new MaterialAlertDialogBuilder(this)
                 .setIcon(R.drawable.alert_warning)
                 .setTitle("Remove Listing")
@@ -67,12 +75,6 @@ public class RemoveListingActivity extends AppCompatActivity {
     }
 
     private void removeListing() {
-
-        if (priceEditText.getVisibility() == View.VISIBLE && priceEditText.getEditText().getText().toString().isEmpty()) {
-            priceEditText.setError("Enter the amount you sold the item");
-        } else {
-            priceEditText.setError(null);
-        }
 
         database.collection("books_on_sale").document(documentPath)
                 .delete()
