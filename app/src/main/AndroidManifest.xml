@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".UsedBookApp"
         android:allowBackup="true"
@@ -16,6 +17,7 @@
         <activity android:name=".SellBookActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".BookDetailsActivity" />
+        <activity android:name=".RemoveListingActivity"/>
         <activity
             android:name=".LoginActivity"
             android:exported="true">

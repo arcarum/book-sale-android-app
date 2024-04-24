@@ -4,22 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
     private final String TAG = "LoginActivity";
-    private EditText etEmail, etPassword;
+    private TextInputLayout etEmail, etPassword;
     private FirebaseAuth mAuth;
-    private TextView textViewError;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,25 +43,40 @@ public class LoginActivity extends AppCompatActivity {
 
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
-        textViewError = findViewById(R.id.textViewError);
+
+        progressBar = findViewById(R.id.progressBar);
     }
 
     public void onClickLogin(View view) {
-        final String email = etEmail.getText().toString();
-        final String password = etPassword.getText().toString();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            textViewError.setText("Please enter the email and password.");
-            textViewError.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        final String email = etEmail.getEditText().getText().toString();
+        final String password = etPassword.getEditText().getText().toString();
+
+        if (email.isEmpty()) {
+            etEmail.setError("Enter an email");
+            progressBar.setVisibility(View.INVISIBLE);
             return;
         } else {
-            textViewError.setVisibility(View.GONE);
+            etEmail.setError(null);
+        }
+
+        if (password.isEmpty()) {
+            etPassword.setError("Enter a password");
+            progressBar.setVisibility(View.INVISIBLE);
+            return;
+        } else {
+            etPassword.setError(null);
         }
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success");
+
+                    progressBar.setVisibility(View.INVISIBLE);
+
                     Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivityIntent);
                     finish();
@@ -69,20 +84,14 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure");
-                    textViewError.setText("Invalid email or password.");
-                    textViewError.setVisibility(View.VISIBLE);
+
+                    etPassword.setError("Invalid password");
+                    progressBar.setVisibility(View.INVISIBLE);
                 });
     }
 
     public void onClickSignup(View view) {
         Intent signupActivityIntent = new Intent(getApplicationContext(), SignupActivity.class);
         startActivity(signupActivityIntent);
-        clearFields();
-    }
-
-    private void clearFields() {
-        etEmail.setText("");
-        etPassword.setText("");
-        textViewError.setVisibility(View.GONE);
     }
 }

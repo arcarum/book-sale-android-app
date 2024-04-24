@@ -5,23 +5,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 public class BookDetailsActivity extends AppCompatActivity {
 
-    private Intent intent;
-    private FirebaseFirestore database;
     private String timeInMilliSec;
     private String email;
 
@@ -43,12 +38,12 @@ public class BookDetailsActivity extends AppCompatActivity {
         TextView sellerTextView = findViewById(R.id.seller_name_text_view);
         TextView emailTextView = findViewById(R.id.email_text_view);
 
-        Button removeListingButton = findViewById(R.id.removeListingButton);
+        Button removeListingButton = findViewById(R.id.remove_listing_button_book_details);
 
         setTitle("Book Details");
         
         // get the intent
-        intent = getIntent();
+        Intent intent = getIntent();
         
         // get data from the intent
         String date = intent.getStringExtra("date");
@@ -72,33 +67,15 @@ public class BookDetailsActivity extends AppCompatActivity {
         } else {
             removeListingButton.setVisibility(View.GONE);
         }
-
-        database = FirebaseFirestore.getInstance();
     }
 
-    public void onClickRemoveListing(View view) {
+    public void onClickRemoveListingBookDetails(View view) {
+        Intent removeListingIntent = new Intent(getApplicationContext(), RemoveListingActivity.class);
 
-        new MaterialAlertDialogBuilder(this)
-                .setIcon(R.drawable.alert_warning)
-                .setTitle("Remove Listing")
-                .setMessage("Are you sure you want to stop selling this book?")
-                .setPositiveButton("Yes", (dialog, which) -> removeListing())
-                .setNegativeButton("No", null)
-                .show();
-    }
+        String documentPath = timeInMilliSec + email;
+        removeListingIntent.putExtra("documentPath", documentPath);
 
-    private void removeListing() {
-
-        database.collection("books_on_sale").document(timeInMilliSec + email)
-                .delete()
-                .addOnSuccessListener(unused -> Toast.makeText(getApplicationContext(),
-                        "Listing successfully deleted!",
-                        Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(),
-                        "Error deleting the listing",
-                        Toast.LENGTH_SHORT).show());
-
-        Toast.makeText(getApplicationContext(), "Listing removed successfully", Toast.LENGTH_SHORT).show();
+        startActivity(removeListingIntent);
         finish();
     }
 }

@@ -3,8 +3,6 @@ package com.project.usedbooksale;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,11 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SellBookActivity extends AppCompatActivity {
-
-    private EditText etTitle;
-    private EditText etPrice;
-    private EditText etDescription;
-    private TextView textViewError;
+    private TextInputLayout etTitleLayout;
+    private TextInputLayout etPriceLayout;
+    private TextInputLayout etDescriptionLayout;
     private FirebaseFirestore database;
     private String userEmail;
     private String userFullName;
@@ -48,23 +45,35 @@ public class SellBookActivity extends AppCompatActivity {
         userEmail = intent.getStringExtra("userEmail");
         userFullName = intent.getStringExtra("userFullName");
 
-        etTitle = findViewById(R.id.et_title);
-        etPrice = findViewById(R.id.et_price);
-        etDescription = findViewById(R.id.et_desciption);
-        textViewError = findViewById(R.id.sell_book_text_view_error);
+        etTitleLayout = findViewById(R.id.et_title_layout);
+        etPriceLayout = findViewById(R.id.et_price_layout);
+        etDescriptionLayout = findViewById(R.id.et_desciption_layout);
     }
 
     public void onClickSignup(View view) {
-        String title = etTitle.getText().toString();
-        String price = etPrice.getText().toString();
-        String description = etDescription.getText().toString();
+        String title = etTitleLayout.getEditText().getText().toString();
+        String price = etPriceLayout.getEditText().getText().toString();
+        String description = etDescriptionLayout.getEditText().getText().toString();
 
-        if (title.isEmpty() || price.isEmpty() || description.isEmpty()) {
-            textViewError.setText("Please fill all the fields.");
-            textViewError.setVisibility(View.VISIBLE);
+        if (title.isEmpty()) {
+            etTitleLayout.setError("Enter the title");
             return;
         } else {
-            textViewError.setVisibility(View.GONE);
+            etTitleLayout.setError(null);
+        }
+
+        if (price.isEmpty()) {
+            etPriceLayout.setError("Enter the price");
+            return;
+        } else {
+            etPriceLayout.setError(null);
+        }
+
+        if (description.isEmpty()) {
+            etDescriptionLayout.setError("Enter the description");
+            return;
+        } else {
+            etDescriptionLayout.setError(null);
         }
 
         // Alert Dialog from https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android
@@ -78,9 +87,9 @@ public class SellBookActivity extends AppCompatActivity {
     }
 
     private void sellBook() {
-        String title = etTitle.getText().toString();
-        String price = etPrice.getText().toString();
-        String description = etDescription.getText().toString();
+        String title = etTitleLayout.getEditText().getText().toString();
+        String price = etPriceLayout.getEditText().getText().toString();
+        String description = etDescriptionLayout.getEditText().getText().toString();
 
         CollectionReference books = database.collection("books_on_sale");
 

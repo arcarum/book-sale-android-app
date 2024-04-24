@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="simple_items">
+        <item>I sold this product</item>
+        <item>I am no longer interested in selling this product</item>
+    </string-array>
+</resources>
