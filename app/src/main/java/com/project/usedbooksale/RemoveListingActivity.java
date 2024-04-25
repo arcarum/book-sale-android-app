@@ -41,7 +41,7 @@ public class RemoveListingActivity extends AppCompatActivity {
 
         AutoCompleteTextView reasonForRemovingSpinner = findViewById(R.id.spinner);
 
-        reasonForRemovingSpinner.setText("I sold this product");
+        reasonForRemovingSpinner.setText("I sold this product", false);
 
         reasonForRemovingSpinner.setOnItemClickListener((parent, view, position, id) -> {
             if (position == 0) {
@@ -59,7 +59,7 @@ public class RemoveListingActivity extends AppCompatActivity {
     public void onClickRemoveListing(View view) {
 
         if (priceEditText.getVisibility() == View.VISIBLE && priceEditText.getEditText().getText().toString().isEmpty()) {
-            priceEditText.setError("Enter the amount you sold the item");
+            priceEditText.setError("Enter the amount");
             return;
         } else {
             priceEditText.setError(null);
