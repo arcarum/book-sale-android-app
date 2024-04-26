@@ -31,6 +31,8 @@ public class BookDetailsActivity extends AppCompatActivity {
     private TextInputEditText descriptionTextView;
     private TextInputEditText categoryTextView;
     private FirebaseFirestore database;
+    private Button saveButton;
+    private Button editButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         TextView emailTextView = findViewById(R.id.email_text_view);
 
         Button removeListingButton = findViewById(R.id.remove_listing_button_book_details);
+        saveButton = findViewById(R.id.save_button_book_details);
+        editButton = findViewById(R.id.edit_button_book_details);
 
         setTitle("Book Details");
 
@@ -86,8 +90,12 @@ public class BookDetailsActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (Objects.equals(auth.getCurrentUser().getEmail(), email)) {
             removeListingButton.setVisibility(View.VISIBLE);
+            saveButton.setVisibility(View.VISIBLE);
+            editButton.setVisibility(View.VISIBLE);
         } else {
             removeListingButton.setVisibility(View.GONE);
+            saveButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.GONE);
         }
     }
 
@@ -135,8 +143,6 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         books.document(timeInMilliSec + email).update(bookInfo);
 
-        Button saveButton = findViewById(R.id.save_button_book_details);
-        Button editButton = findViewById(R.id.edit_button_book_details);
         Button exitButton = findViewById(R.id.exit_button_book_details);
 
         setEditable(false);
