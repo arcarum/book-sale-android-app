@@ -3,6 +3,7 @@ package com.project.usedbooksale;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +27,7 @@ public class SellBookActivity extends AppCompatActivity {
     private String userEmail;
     private String userFullName;
     private Intent intent;
+    private AutoCompleteTextView categorySpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,9 @@ public class SellBookActivity extends AppCompatActivity {
         etTitleLayout = findViewById(R.id.et_title_layout);
         etPriceLayout = findViewById(R.id.et_price_layout);
         etDescriptionLayout = findViewById(R.id.et_desciption_layout);
+
+        categorySpinner = findViewById(R.id.spinner_category);
+        categorySpinner.setText((CharSequence) categorySpinner.getAdapter().getItem(0), false);
     }
 
     public void onClickSignup(View view) {
@@ -99,6 +104,7 @@ public class SellBookActivity extends AppCompatActivity {
         bookInfo.put("Description", description);
         bookInfo.put("Name", userFullName);
         bookInfo.put("Email", userEmail);
+        bookInfo.put("Category", categorySpinner.getEditableText().toString());
 
         long date = System.currentTimeMillis();
         bookInfo.put("Date", date);

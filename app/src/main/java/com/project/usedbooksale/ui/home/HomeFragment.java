@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private FirebaseFirestore database;
     private ListView listView;
     private View searchView;
+    private TextView noBooksTextView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<HashMap<String, String>> data;
     private ArrayList<HashMap<String, String>> filteredData;
@@ -54,6 +56,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView.setOnItemClickListener(this);
         database = FirebaseFirestore.getInstance();
 
+        noBooksTextView = binding.noBooksHomeTextView;
+
         // set separator color from
         // https://stackoverflow.com/questions/2372415/how-to-change-color-of-android-listview-separator-line
         int[] colors = {0, 0xFF000000, 0};
@@ -63,7 +67,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         executor = Executors.newCachedThreadPool();
         executor.execute(this::updateDisplay);
 
-        swipeRefreshLayout = binding.swipeRefreshLayout;
+        swipeRefreshLayout = binding.swipeRefreshLayoutHome;
 
         // from https://developer.android.com/develop/ui/views/touch-and-input/swipe/respond-refresh-request#java
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -132,7 +136,16 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 bookInfoMap.put("desc", (String) querySnapshot.getData().get("Description"));
                 bookInfoMap.put("email", (String) querySnapshot.getData().get("Email"));
                 bookInfoMap.put("name", (String) querySnapshot.getData().get("Name"));
+                bookInfoMap.put("category", (String) querySnapshot.getData().get("Category"));
                 data.add(bookInfoMap);
+            }
+
+            if (data.isEmpty()) {
+                noBooksTextView.setVisibility(View.VISIBLE);
+                swipeRefreshLayout.setVisibility(View.GONE);
+            } else {
+                noBooksTextView.setVisibility(View.GONE);
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
             }
 
             // create the resource, from, and to variables
@@ -188,10 +201,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
         intent.putExtra("date", info.get(position).get("date"));
         intent.putExtra("title", info.get(position).get("title"));
-        intent.putExtra("price", info.get(position).get("price"));
+        intent.putExtra("price", info.get(position).get("price").replace(" AED", ""));
         intent.putExtra("desc", info.get(position).get("desc"));
         intent.putExtra("name", info.get(position).get("name"));
         intent.putExtra("email", info.get(position).get("email"));
+        intent.putExtra("category", info.get(position).get("category"));
         intent.putExtra("timeInMilliSec", info.get(position).get("timeInMilliSec"));
 
         startActivity(intent);

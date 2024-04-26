@@ -41,7 +41,7 @@ public class RemoveListingActivity extends AppCompatActivity {
 
         AutoCompleteTextView reasonForRemovingSpinner = findViewById(R.id.spinner);
 
-        reasonForRemovingSpinner.setText("I sold this product", false);
+        reasonForRemovingSpinner.setText((CharSequence) reasonForRemovingSpinner.getAdapter().getItem(0), false);
 
         reasonForRemovingSpinner.setOnItemClickListener((parent, view, position, id) -> {
             if (position == 0) {
@@ -79,13 +79,11 @@ public class RemoveListingActivity extends AppCompatActivity {
         database.collection("books_on_sale").document(documentPath)
                 .delete()
                 .addOnSuccessListener(unused -> Toast.makeText(getApplicationContext(),
-                        "Listing successfully deleted!",
+                        "Listing successfully removed!",
                         Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getApplicationContext(),
-                        "Error deleting the listing",
+                        "Error removing the listing",
                         Toast.LENGTH_SHORT).show());
-
-        Toast.makeText(getApplicationContext(), "Listing removed successfully", Toast.LENGTH_SHORT).show();
         finish();
     }
 }

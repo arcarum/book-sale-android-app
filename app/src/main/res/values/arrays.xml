@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="simple_items">
+    <string-array name="reason_items">
         <item>I sold this product</item>
-        <item>I am no longer interested in selling this product</item>
+        <item>I am no longer interested</item>
+    </string-array>
+
+    <string-array name="category_items">
+        <item>Arts</item>
+        <item>Business</item>
+        <item>Literature</item>
+        <item>Medical </item>
+        <item>Social Sciences</item>
+        <item>Science</item>
+        <item>Math</item>
+        <item>Engineering</item>
     </string-array>
 </resources>

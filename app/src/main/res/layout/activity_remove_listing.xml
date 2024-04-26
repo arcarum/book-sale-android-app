@@ -5,9 +5,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_marginLeft="30dp"
-    android:layout_marginTop="50dp"
+    android:layout_marginTop="30dp"
     android:layout_marginRight="30dp"
-    android:layout_marginBottom="50dp"
+    android:layout_marginBottom="30dp"
     android:orientation="vertical">
 
     <TextView
@@ -36,7 +36,7 @@
             android:inputType="none"
             android:longClickable="false"
             android:textIsSelectable="false"
-            app:simpleItems="@array/simple_items" />
+            app:simpleItems="@array/reason_items" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -78,7 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:errorEnabled="true"
-        android:hint="Descrption">
+        android:hint="Descrption (optional)">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
