@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -33,6 +34,12 @@ public class BookDetailsActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private Button saveButton;
     private Button editButton;
+    private String date;
+    private String title;
+    private String description;
+    private String price;
+    private String seller;
+    private String category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        setTitle("Book Details");
 
         titleTextView = findViewById(R.id.title_text_view);
         sellerTextView = findViewById(R.id.seller_name_text_view);
@@ -51,43 +59,27 @@ public class BookDetailsActivity extends AppCompatActivity {
         descriptionTextView = findViewById(R.id.desc_text_view);
         categoryTextView = findViewById(R.id.category_text_view);
 
+        Intent intent = getIntent();
+
+        date = intent.getStringExtra("date");
+        title = intent.getStringExtra("title");
+        description = intent.getStringExtra("desc");
+        price = intent.getStringExtra("price");
+        seller = intent.getStringExtra("name");
+        category = intent.getStringExtra("category");
+        email = intent.getStringExtra("email");
+        timeInMilliSec = intent.getStringExtra("timeInMilliSec");
+
         database = FirebaseFirestore.getInstance();
 
         updateDisplay();
-    }
-
-    private void updateDisplay() {
-
-        TextView emailTextView = findViewById(R.id.email_text_view);
 
         Button removeListingButton = findViewById(R.id.remove_listing_button_book_details);
         saveButton = findViewById(R.id.save_button_book_details);
         editButton = findViewById(R.id.edit_button_book_details);
 
-        setTitle("Book Details");
-
-        // get the intent
-        Intent intent = getIntent();
-
-        // get data from the intent
-        String date = intent.getStringExtra("date");
-        String title = intent.getStringExtra("title");
-        String description = intent.getStringExtra("desc");
-        String price = intent.getStringExtra("price");
-        String seller = intent.getStringExtra("name");
-        String category = intent.getStringExtra("category");
-        email = intent.getStringExtra("email");
-        timeInMilliSec = intent.getStringExtra("timeInMilliSec");
-
-        titleTextView.setText(title);
-        dateTextView.setText(date);
-        descriptionTextView.setText(description);
-        priceTextView.setText(price);
-        sellerTextView.setText(seller);
-        categoryTextView.setText(category);
-        emailTextView.setText(email);
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
+
         if (Objects.equals(auth.getCurrentUser().getEmail(), email)) {
             removeListingButton.setVisibility(View.VISIBLE);
             saveButton.setVisibility(View.VISIBLE);
@@ -99,27 +91,28 @@ public class BookDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void updateDisplay() {
+        TextView emailTextView = findViewById(R.id.email_text_view);
+        titleTextView.setText(title);
+        dateTextView.setText(date);
+        descriptionTextView.setText(description);
+        priceTextView.setText(price);
+        sellerTextView.setText(seller);
+        categoryTextView.setText(category);
+        emailTextView.setText(email);
+    }
+
     public void onClickEditBookDetails(View view) {
-        TextInputEditText title = findViewById(R.id.title_text_view);
         Button exitButton = findViewById(R.id.exit_button_book_details);
 
-        if (!title.isClickable()) {
-            setEditable(true);
-            saveButton.setEnabled(true);
-            editButton.setVisibility(View.GONE);
-            exitButton.setVisibility(View.VISIBLE);
-        } else {
-            setEditable(false);
-            saveButton.setEnabled(false);
-            editButton.setVisibility(View.VISIBLE);
-            exitButton.setVisibility(View.GONE);
-        }
+        setEditable(true);
+        saveButton.setEnabled(true);
+        editButton.setVisibility(View.GONE);
+        exitButton.setVisibility(View.VISIBLE);
         updateDisplay();
     }
 
     public void onClickExitBookDetails(View view) {
-        Button saveButton = findViewById(R.id.save_button_book_details);
-        Button editButton = findViewById(R.id.edit_button_book_details);
         Button exitButton = findViewById(R.id.exit_button_book_details);
 
         setEditable(false);
@@ -134,10 +127,14 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         CollectionReference books = database.collection("books_on_sale");
 
+        title = String.valueOf(titleTextView.getText());
+        price = String.valueOf(priceTextView.getText());
+        description = String.valueOf(descriptionTextView.getText());
+
         Map<String, Object> bookInfo = new HashMap<>();
-        bookInfo.put("Title", String.valueOf(titleTextView.getText()));
-        bookInfo.put("Price", String.valueOf(priceTextView.getText()));
-        bookInfo.put("Description", String.valueOf(descriptionTextView.getText()));
+        bookInfo.put("Title", title);
+        bookInfo.put("Price", price);
+        bookInfo.put("Description", description);
 
         books.document(timeInMilliSec + email).update(bookInfo);
 
@@ -147,6 +144,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         saveButton.setEnabled(false);
         editButton.setVisibility(View.VISIBLE);
         exitButton.setVisibility(View.GONE);
+
+        Toast.makeText(this, "New book details saved successfully.", Toast.LENGTH_SHORT).show();
     }
 
     public void onClickRemoveListingBookDetails(View view) {
