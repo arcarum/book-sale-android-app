@@ -174,6 +174,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         descriptionTextView.clearFocus();
         descriptionTextView.clearComposingText();
 
+        categoryTextView.setEnabled(!editable);
         sellerTextView.setEnabled(!editable);
         dateTextView.setEnabled(!editable);
     }
