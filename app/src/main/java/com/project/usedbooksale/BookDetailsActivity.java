@@ -125,6 +125,28 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     public void onClickSaveBookDetails(View view) {
 
+        if (String.valueOf(titleTextView.getText()).isEmpty()) {
+            titleTextView.setError("Enter the title");
+            return;
+        } else {
+            titleTextView.setError(null);
+        }
+
+        if (String.valueOf(priceTextView.getText()).isEmpty()) {
+            priceTextView.setError("Enter the price");
+            return;
+        } else {
+            priceTextView.setError(null);
+        }
+
+        if (String.valueOf(descriptionTextView.getText()).isEmpty()) {
+            descriptionTextView.setError("Enter the description");
+            return;
+        } else {
+            descriptionTextView.setError(null);
+        }
+
+
         CollectionReference books = database.collection("books_on_sale");
 
         title = String.valueOf(titleTextView.getText());
@@ -163,16 +185,19 @@ public class BookDetailsActivity extends AppCompatActivity {
         titleTextView.setClickable(editable);
         titleTextView.clearFocus();
         titleTextView.clearComposingText();
+        titleTextView.setError(null);
 
         priceTextView.setFocusableInTouchMode(editable);
         priceTextView.setClickable(editable);
         priceTextView.clearFocus();
         priceTextView.clearComposingText();
+        priceTextView.setError(null);
 
         descriptionTextView.setFocusableInTouchMode(editable);
         descriptionTextView.setClickable(editable);
         descriptionTextView.clearFocus();
         descriptionTextView.clearComposingText();
+        descriptionTextView.setError(null);
 
         categoryTextView.setEnabled(!editable);
         sellerTextView.setEnabled(!editable);
