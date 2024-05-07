@@ -13,7 +13,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.project.usedbooksale.ui.home.HomeFragment;
 
 public class UsedBookService extends Service {
 

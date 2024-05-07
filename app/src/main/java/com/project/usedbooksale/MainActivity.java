@@ -112,8 +112,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(sellBookIntent);
             return true;
         }
-        if (item.getItemId() == R.id.menu_settings) {
-            Toast.makeText(this, "Settings to be implemented in a future update!", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.menu_about) {
+            Intent aboutIntent = new Intent(this, AboutActivity.class);
+            startActivity(aboutIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);
