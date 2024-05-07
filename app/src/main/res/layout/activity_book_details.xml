@@ -164,8 +164,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onEmailClick"
             android:paddingLeft="5dp"
-            android:text="Email" />
+            android:text="Email"
+            android:textColor="#03A9F4" />
     </LinearLayout>
 
     <LinearLayout

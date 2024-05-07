@@ -19,6 +19,7 @@ public class UsedBookService extends Service {
 
     private final String TAG = "UsedBookService";
     private boolean firstTimeOpeningApp = true;
+    static public boolean didCurrentUserSellBook = false;
 
     @Override
     public void onCreate() {
@@ -30,6 +31,11 @@ public class UsedBookService extends Service {
 
             if (firstTimeOpeningApp) {
                 firstTimeOpeningApp = false;
+                return;
+            }
+
+            if (didCurrentUserSellBook) {
+                didCurrentUserSellBook = false;
                 return;
             }
 
@@ -65,7 +71,7 @@ public class UsedBookService extends Service {
     {
 
         // create the intent for the notification
-        Intent notificationIntent = new Intent(this, HomeFragment.class)
+        Intent notificationIntent = new Intent(this, MainActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         // create the pending intent

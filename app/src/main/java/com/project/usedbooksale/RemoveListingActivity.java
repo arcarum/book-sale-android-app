@@ -75,7 +75,7 @@ public class RemoveListingActivity extends AppCompatActivity {
     }
 
     private void removeListing() {
-
+        UsedBookService.didCurrentUserSellBook = true;
         database.collection("books_on_sale").document(documentPath)
                 .delete()
                 .addOnSuccessListener(unused -> Toast.makeText(getApplicationContext(),

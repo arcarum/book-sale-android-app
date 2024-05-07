@@ -152,10 +152,8 @@ public class MyListingsFragment extends Fragment implements AdapterView.OnItemCl
 
             if (data.isEmpty()) {
                 noBooksTextView.setVisibility(View.VISIBLE);
-                swipeRefreshLayout.setVisibility(View.GONE);
             } else {
                 noBooksTextView.setVisibility(View.GONE);
-                swipeRefreshLayout.setVisibility(View.VISIBLE);
             }
 
             // create the resource, from, and to variables
@@ -225,7 +223,7 @@ public class MyListingsFragment extends Fragment implements AdapterView.OnItemCl
     private String convertTimestamp(long timestamp) {
         // Converting date from
         // https://stackoverflow.com/questions/18929929/convert-timestamp-into-current-date-in-android#18930056
-        return (String) DateFormat.format("MMMM dd, yyyy HH:mm:ss", timestamp);
+        return (String) DateFormat.format("MMMM dd, yyyy", timestamp);
     }
 
     @Override

@@ -203,4 +203,33 @@ public class BookDetailsActivity extends AppCompatActivity {
         sellerTextView.setEnabled(!editable);
         dateTextView.setEnabled(!editable);
     }
+
+    // from https://stackoverflow.com/questions/2197741/how-to-send-emails-from-my-android-application
+    public void onEmailClick(View view) {
+
+        // set email intent
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc822");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Interested in Purchasing " + title);
+
+        // Get logged in user name
+        database.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    String fName = (String) documentSnapshot.get("FirstName");
+                    String lName = (String) documentSnapshot.get("LastName");
+                    String userFullName = fName + " " + lName;
+
+                    intent.putExtra(Intent.EXTRA_TEXT, "Dear " + seller + "," +
+                            "\n\n I am interested in purchasing " + title + " from you at the cost of " + price + "." +
+                            "\n\n Best Regards," +
+                            "\n " + userFullName);
+                    try {
+                        startActivity(Intent.createChooser(intent, "Send mail..."));
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(getApplicationContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }

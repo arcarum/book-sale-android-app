@@ -110,6 +110,7 @@ public class SellBookActivity extends AppCompatActivity {
         bookInfo.put("Date", date);
 
         books.document(date + userEmail).set(bookInfo);
+        UsedBookService.didCurrentUserSellBook = true;
         Toast.makeText(getApplicationContext(), "Book sold successfully", Toast.LENGTH_SHORT).show();
         
         intent.putExtra("updateDisplay", true);
