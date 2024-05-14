@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Book Selling Android application designed to facilitate the buying and selling of books. Users can create accounts, browse books currently on sale, search for specific titles, and list their own books for sale. This app utilizes Firebase for authentication and data storage, ensuring seamless user experience and data security. It follows Material Design guidelines for a modern and intuitive user interface.
+A Book Selling Android application designed to facilitate the buying and selling of books. Users can create accounts, browse books currently on sale, search for specific titles, and list their own books for sale. This app utilizes Firebase for authentication and data storage, ensuring seamless user experience and data security. It follows Material Design guidelines for a modern and intuitive user interface. Additionally, there is error checking for all fields to ensure the user has properly entered the details required.
 
 ## Features
 
@@ -55,4 +55,5 @@ A Book Selling Android application designed to facilitate the buying and selling
 
 ## Demo
 
-Coming soon.
+[demo.webm](https://github.com/arcarum/used-book-sale-app/assets/134963929/a69641a5-3dbd-4463-948c-1cbecf897515)
+
